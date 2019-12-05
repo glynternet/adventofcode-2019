@@ -5,9 +5,6 @@ import (
 	"log"
 )
 
-// input to task is the memory of a computer
-type memory []int64
-
 func main() {
 	for i, tc := range []struct {
 		in  memory
@@ -78,6 +75,9 @@ func part02(in memory) {
 
 }
 
+// input to task is the memory of a computer
+type memory []int64
+
 func (in memory) copyAndRestore(noun, verb int64) memory {
 	out := make(memory, len(in))
 	copy(out, in)
@@ -98,26 +98,26 @@ func (in memory) runUntilHalt() memory {
 		if !ok {
 			log.Panicf("invalid value at cursor %d %d", cursor, code)
 		}
-		operation, paramCount := getOp(&in, cursor)
-		operation(&in)
+		operation, paramCount := getOp(in, cursor)
+		operation(in)
 		cursor += 1 + paramCount
 	}
 }
 
 type opcode int
-type operation func(*memory)
+type operation func(memory)
 
-var ops = map[opcode]func(*memory, int) (operation, int){
-	1: (*memory).getAdditionOp,
-	2: (*memory).getMultiplicationOp,
+var ops = map[opcode]func(memory, int) (operation, int){
+	1: (memory).getAdditionOp,
+	2: (memory).getMultiplicationOp,
 }
 
 func (in memory) getAdditionOp(cursor int) (operation, int) {
 	lhs := in.getValue(cursor + 1)
 	rhs := in.getValue(cursor + 2)
 	outPos := in.getValue(cursor + 3)
-	return func(m *memory) {
-		in[outPos] = in[lhs] + in[rhs]
+	return func(m memory) {
+		m[outPos] = m[lhs] + m[rhs]
 	}, 3
 }
 
@@ -125,8 +125,8 @@ func (in memory) getMultiplicationOp(cursor int) (operation, int) {
 	lhs := in.getValue(cursor + 1)
 	rhs := in.getValue(cursor + 2)
 	outPos := in.getValue(cursor + 3)
-	return func(m *memory) {
-		in[outPos] = in[lhs] * in[rhs]
+	return func(m memory) {
+		m[outPos] = m[lhs] * m[rhs]
 	}, 3
 }
 
