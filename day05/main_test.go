@@ -71,6 +71,10 @@ func Test_parameterInstruction_parameterMode(t *testing.T) {
 		want  parameterMode
 	}{
 		{
+			pi:    parameterInstruction{1, 2},
+			index: 0,
+			want:  0,
+		}, {
 			pi:    parameterInstruction{7, 1, 2},
 			index: 0,
 			want:  7,
@@ -92,4 +96,22 @@ func Test_parameterInstruction_parameterMode(t *testing.T) {
 			assert.Equal(t, tc.want, tc.pi.parameterMode(tc.index))
 		})
 	}
+}
+
+func Test_test02(t *testing.T) {
+	test00()
+	test01()
+	test02()
+	test03()
+	test04()
+	test05()
+	test06()
+	test07()
+	test08()
+	test09()
+	test10()
+	test11()
+	test12()
+	test13()
+	test14()
 }
