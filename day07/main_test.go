@@ -2,11 +2,20 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestName(t *testing.T) {
+	inCh := make(chan int64)
+	outCh := make(chan int64)
+	go computer{memory: memory{3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0}}.runUntilHalt(inCh, outCh)
+	go func() { inCh <- 4 }()
+	log.Println(<-outCh)
+}
 
 func Test_parseParamaters(t *testing.T) {
 
@@ -99,19 +108,19 @@ func Test_parameterInstruction_parameterMode(t *testing.T) {
 }
 
 func Test_test02(t *testing.T) {
-	test00()
-	test01()
-	test02()
-	test03()
-	test04()
-	test05()
-	test06()
-	test07()
-	test08()
-	test09()
-	test10()
-	test11()
-	test12()
-	test13()
-	test14()
+	day5test00()
+	day5test01()
+	day5test02()
+	day5test03()
+	day5test04()
+	day5test05()
+	day5test06()
+	day5test07()
+	day5test08()
+	day5test09()
+	day5test10()
+	day5test11()
+	day5test12()
+	day5test13()
+	day5test14()
 }
