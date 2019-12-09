@@ -1,47 +1,68 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"sync"
 
 	"github.com/glynternet/adventofcode-2019/assert"
 )
 
 func main() {
 	//day5Tests()
-	//testCases()
-
-	part01()
+	//part01testCases()
+	//part01()
+	//
+	part02testCases()
+	part02()
 }
 
 func part01() {
 	input := memory{3, 8, 1001, 8, 10, 8, 105, 1, 0, 0, 21, 34, 51, 64, 81, 102, 183, 264, 345, 426, 99999, 3, 9, 102, 2, 9, 9, 1001, 9, 4, 9, 4, 9, 99, 3, 9, 101, 4, 9, 9, 102, 5, 9, 9, 1001, 9, 2, 9, 4, 9, 99, 3, 9, 101, 3, 9, 9, 1002, 9, 5, 9, 4, 9, 99, 3, 9, 102, 3, 9, 9, 101, 3, 9, 9, 1002, 9, 4, 9, 4, 9, 99, 3, 9, 1002, 9, 3, 9, 1001, 9, 5, 9, 1002, 9, 5, 9, 101, 3, 9, 9, 4, 9, 99, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 99, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 99, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 99}
 	max := int64(-999999)
-	for _, seq := range generateSequences() {
+	for _, seq := range generateSequences(0) {
 		ampCount := 5
 		out := runChained(ampCount, input.copy(), seq)
 		if out > max {
 			max = out
 		}
 	}
-	log.Println(max)
+	assert.True(max == int64(46248), "")
+	fmt.Println(max)
 }
 
-func generateSequences() [][]int64 {
+func part02() {
+	input := memory{3, 8, 1001, 8, 10, 8, 105, 1, 0, 0, 21, 34, 51, 64, 81, 102, 183, 264, 345, 426, 99999, 3, 9, 102, 2, 9, 9, 1001, 9, 4, 9, 4, 9, 99, 3, 9, 101, 4, 9, 9, 102, 5, 9, 9, 1001, 9, 2, 9, 4, 9, 99, 3, 9, 101, 3, 9, 9, 1002, 9, 5, 9, 4, 9, 99, 3, 9, 102, 3, 9, 9, 101, 3, 9, 9, 1002, 9, 4, 9, 4, 9, 99, 3, 9, 1002, 9, 3, 9, 1001, 9, 5, 9, 1002, 9, 5, 9, 101, 3, 9, 9, 4, 9, 99, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 99, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 99, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 99, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 101, 2, 9, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 1001, 9, 1, 9, 4, 9, 3, 9, 1002, 9, 2, 9, 4, 9, 3, 9, 1001, 9, 2, 9, 4, 9, 3, 9, 102, 2, 9, 9, 4, 9, 3, 9, 101, 1, 9, 9, 4, 9, 99}
+	max := int64(-999999)
+	for _, seq := range generateSequences(5) {
+		ampCount := 5
+		out := runLooped(ampCount, input.copy(), seq)
+		if out > max {
+			max = out
+		}
+	}
+	//assert.True(max == int64(46248), "")
+	fmt.Println(max)
+}
+
+// need to start at 0 for part 1 and 5 for part 2
+func generateSequences(start int64) [][]int64 {
 	var seqs [][]int64
-	for a := int64(0); a < 5; a++ {
-		for b := int64(0); b < 5; b++ {
+	end := 5 + start
+	for a := start; a < end; a++ {
+		for b := start; b < end; b++ {
 			if b == a {
 				continue
 			}
-			for c := int64(0); c < 5; c++ {
+			for c := start; c < end; c++ {
 				if c == b || c == a {
 					continue
 				}
-				for d := int64(0); d < 5; d++ {
+				for d := start; d < end; d++ {
 					if d == c || d == b || d == a {
 						continue
 					}
-					for e := int64(0); e < 5; e++ {
+					for e := start; e < end; e++ {
 						if e == d || e == c || e == b || e == a {
 							continue
 						}
@@ -54,7 +75,7 @@ func generateSequences() [][]int64 {
 	return seqs
 }
 
-func testCases() {
+func part01testCases() {
 	for i, tc := range []struct {
 		thrusterSignal []int64
 		expectOut      int64
@@ -85,6 +106,101 @@ func testCases() {
 	}
 }
 
+func part02testCases() {
+	for i, tc := range []struct {
+		thrusterSignal []int64
+		expectOut      int64
+		memory         memory
+	}{
+		{
+			thrusterSignal: []int64{9, 8, 7, 6, 5},
+			memory: memory{3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26,
+				27, 4, 27, 1001, 28, -1, 28, 1005, 28, 6, 99, 0, 0, 5},
+			expectOut: 139629729,
+		},
+		{
+			thrusterSignal: []int64{9, 7, 8, 5, 6},
+			memory: memory{3, 52, 1001, 52, -5, 52, 3, 53, 1, 52, 56, 54, 1007, 54, 5, 55, 1005, 55, 26, 1001, 54,
+				-5, 54, 1105, 1, 12, 1, 53, 54, 53, 1008, 54, 0, 55, 1001, 55, 1, 55, 2, 53, 55, 53, 4,
+				53, 1001, 56, -1, 56, 1005, 56, 6, 99, 0, 0, 0, 0, 10},
+			expectOut: 18216,
+		},
+	} {
+		ampCount := 5
+		out := runLooped(ampCount, tc.memory, tc.thrusterSignal)
+		assert.Truef(tc.expectOut == out, "[%d] expected %d but got %d", i, tc.expectOut, out)
+		log.Println(out)
+	}
+}
+
+func runLooped(ampCount int, input memory, thrusterSignal []int64) int64 {
+	inChans := make([]chan int64, ampCount)
+	outChans := make([]chan int64, ampCount)
+	ampControllers := make([]computer, ampCount)
+	for i := 0; i < ampCount; i++ {
+		ampControllers[i] = computer{
+			id:      i,
+			memory:  input.copy(),
+			pointer: 0,
+		}
+		inChans[i] = make(chan int64, 1)
+		outChans[i] = make(chan int64, 1)
+		// could be a data thing here
+		inChans[i] <- thrusterSignal[i]
+		log.Printf("[%d] initial input:%d sent", i, thrusterSignal[i])
+	}
+
+	for i := 0; i < ampCount-1; i++ {
+		log.Printf("[%d] chaining", i)
+		go func(index int) {
+			log.Printf("[%d] channels chained", index)
+			for {
+				val, ok := <-outChans[index]
+				nextInChan := inChans[index+1]
+				if !ok {
+					log.Printf("closing input channel: %d", index+1)
+					close(nextInChan)
+					return
+				}
+				nextInChan <- val
+			}
+		}(i)
+	}
+
+	wg := sync.WaitGroup{}
+	var last int64
+	wg.Add(1)
+	go func() {
+		log.Printf("channels looping")
+		for {
+			val, ok := <-outChans[ampCount-1]
+			if !ok {
+				log.Printf("closing input channel: %d", 0)
+				close(inChans[0])
+				wg.Done()
+				return
+			}
+			log.Println(val)
+			last = val
+			inChans[0] <- val
+		}
+	}()
+
+	for i := 0; i < ampCount; i++ {
+		go func(index int) {
+			ampControllers[index].runUntilHalt(inChans[index], outChans[index])
+		}(i)
+	}
+
+	inChans[0] <- 0
+	//var last int64
+	//for val := range outChans[ampCount-1] {
+	//	last = val
+	//}
+	wg.Wait()
+	return last
+}
+
 func runChained(ampCount int, input memory, thrusterSignal []int64) int64 {
 	inChans := make([]chan int64, ampCount)
 	outChans := make([]chan int64, ampCount)
@@ -105,7 +221,11 @@ func runChained(ampCount int, input memory, thrusterSignal []int64) int64 {
 	for i := 0; i < ampCount-1; i++ {
 		log.Printf("[%d] chaining", i)
 		go func(index int) {
-			inChans[index+1] <- <-outChans[index]
+			val, ok := <-outChans[index]
+			if !ok {
+				return
+			}
+			inChans[index+1] <- val
 			log.Printf("[%d] channels chained", index)
 		}(i)
 	}
@@ -117,7 +237,11 @@ func runChained(ampCount int, input memory, thrusterSignal []int64) int64 {
 	}
 
 	inChans[0] <- 0
-	return <-outChans[ampCount-1]
+	var last int64
+	for val := range outChans[ampCount-1] {
+		last = val
+	}
+	return last
 }
 
 type computer struct {
@@ -208,8 +332,8 @@ func getStoreOp(id int, input <-chan int64) func(parameterInstruction) operation
 				log.Printf("[%d] CHANNEL IS CLOSED", id)
 				return
 			}
+			log.Printf("[%d] input received:%d", id, i)
 			c.memory[storePos] = i
-			log.Printf("[%d] input received", id)
 			c.pointer += 1 + 1
 		}
 	}
@@ -220,9 +344,10 @@ func getOutputOp(id int, output chan<- int64) func(parameterInstruction) operati
 		outputPositionParamMode := pi.parameterMode(0)
 		return func(c *computer) {
 			outputPos := outputPositionParamMode.getParamValue(*c, 0)
-			log.Printf("[%d] sending", id)
-			output <- c.memory.getValue(int(outputPos))
-			log.Printf("[%d] sent", id)
+			value := c.memory.getValue(int(outputPos))
+			log.Printf("[%d] sending value:%d", id, value)
+			output <- value
+			log.Printf("[%d] sent value:%d", id, value)
 			c.pointer += 1 + 1
 		}
 	}
